@@ -52,13 +52,22 @@ class App() {
 /**
  * Main UI window (view)
  * Defines the UI and responds to events
- * The app model should be passwd as an argument
+ * The app model should be passed as an argument
  */
 class MainWindow(val app: App) : JFrame(), ActionListener {
 
     // Fields to hold the UI elements
-    private lateinit var clicksLabel: JLabel
-    private lateinit var clickButton: JButton
+    private lateinit var locationLabel: JLabel
+    private lateinit var upButton: JButton
+    private lateinit var downButton: JButton
+    private lateinit var leftButton: JButton
+    private lateinit var rightButton: JButton
+    private lateinit var aButton: JButton
+    private lateinit var bButton: JButton
+    private lateinit var xButton: JButton
+    private lateinit var yButton: JButton
+    private lateinit var gameFrame: JLabel
+
 
     /**
      * Configure the UI and display it
@@ -78,7 +87,7 @@ class MainWindow(val app: App) : JFrame(), ActionListener {
      */
     private fun configureWindow() {
         title = "Kotlin Swing GUI Demo"
-        contentPane.preferredSize = Dimension(600, 350)
+        contentPane.preferredSize = Dimension(800, 400)
         defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
         isResizable = false
         layout = null
@@ -92,17 +101,66 @@ class MainWindow(val app: App) : JFrame(), ActionListener {
     private fun addControls() {
         val baseFont = Font(Font.SANS_SERIF, Font.PLAIN, 36)
 
-        clicksLabel = JLabel("CLICK INFO HERE")
-        clicksLabel.horizontalAlignment = SwingConstants.CENTER
-        clicksLabel.bounds = Rectangle(50, 50, 500, 100)
-        clicksLabel.font = baseFont
-        add(clicksLabel)
+        locationLabel = JLabel("Location")
+        locationLabel.horizontalAlignment = SwingConstants.CENTER
+        locationLabel.bounds = Rectangle(223, 50, 301, 50)
+        locationLabel.alignmentX = Component.CENTER_ALIGNMENT
+        locationLabel.font = baseFont
+        add(locationLabel)
 
-        clickButton = JButton("Click Me!")
-        clickButton.bounds = Rectangle(50,200,500,100)
-        clickButton.font = baseFont
-        clickButton.addActionListener(this)     // Handle any clicks
-        add(clickButton)
+        gameFrame = JLabel()
+        gameFrame.horizontalAlignment = SwingConstants.CENTER
+        gameFrame.bounds = Rectangle(223, 50, 301, 301)
+        gameFrame.font = baseFont
+        add(gameFrame)
+
+        upButton = JButton("⇡")
+        upButton.bounds = Rectangle(100,125,50,50)
+        upButton.font = baseFont
+        upButton.addActionListener(this)     // Handle any clicks
+        add(upButton)
+
+        leftButton = JButton("⇠")
+        leftButton.bounds = Rectangle(50,175,50,50)
+        leftButton.font = baseFont
+        leftButton.addActionListener(this)     // Handle any clicks
+        add(leftButton)
+
+        rightButton = JButton("⇢")
+        rightButton.bounds = Rectangle(150,175,50,50)
+        rightButton.font = baseFont
+        rightButton.addActionListener(this)     // Handle any clicks
+        add(rightButton)
+
+        downButton = JButton("⇣")
+        downButton.bounds = Rectangle(100,225,50,50)
+        downButton.font = baseFont
+        downButton.addActionListener(this)     // Handle any clicks
+        add(downButton)
+
+        xButton = JButton("X")
+        xButton.bounds = Rectangle(665,125,50,50)
+        xButton.font = baseFont
+        xButton.addActionListener(this)     // Handle any clicks
+        add(xButton)
+
+        yButton = JButton("Y")
+        yButton.bounds = Rectangle(615,175,50,50)
+        yButton.font = baseFont
+        yButton.addActionListener(this)     // Handle any clicks
+        add(yButton)
+
+        aButton = JButton("A")
+        aButton.bounds = Rectangle(715,175,50,50)
+        aButton.font = baseFont
+        aButton.addActionListener(this)     // Handle any clicks
+        add(aButton)
+
+        bButton = JButton("B")
+        bButton.bounds = Rectangle(665,225,50,50)
+        bButton.font = baseFont
+        bButton.addActionListener(this)     // Handle any clicks
+        add(bButton)
     }
 
 
@@ -111,14 +169,7 @@ class MainWindow(val app: App) : JFrame(), ActionListener {
      * of the application model
      */
     fun updateView() {
-        if (app.clicks == app.MAX_CLICKS) {
-            clicksLabel.text = "Max clicks reached!"
-            clickButton.isEnabled = false
-        }
-        else {
-            clicksLabel.text = "You clicked ${app.clicks} times"
-            clickButton.isEnabled = true
-        }
+
     }
 
     /**
@@ -128,7 +179,7 @@ class MainWindow(val app: App) : JFrame(), ActionListener {
      */
     override fun actionPerformed(e: ActionEvent?) {
         when (e?.source) {
-            clickButton -> {
+            upButton -> {
                 app.updateClickCount()
                 updateView()
             }
