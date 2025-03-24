@@ -36,16 +36,24 @@ fun main() {
  */
 class App() {
     // Constants defining any key values
-    val MAX_CLICKS = 10
+    val locations = mutableListOf<Location>()
+    var currentLocation: Int = 0
 
-    // Data fields
-    var clicks = 0
-
-    // Application logic functions
-    fun updateClickCount() {
-        clicks++
-        if (clicks > MAX_CLICKS) clicks = MAX_CLICKS
+    init {
+        // Add Locations to the list
+        locations.add(Location("location0", null, mutableListOf(null, 1, null, null)))
+        locations.add(Location("location1", null, mutableListOf(null, null, 2, 0)))
+        locations.add(Location("location2", null, mutableListOf(1, null, null, null)))
     }
+
+    fun travel(dir: Int){
+        currentLocation = locations[currentLocation].connections[dir]!!
+        println("User traveled to ${locations[currentLocation].name}")
+    }
+}
+
+class Location(val name: String, val desc: String?, val connections: MutableList<Int?>){
+    // Locations can only have four connections, (left, up, right, down)
 }
 
 
@@ -103,14 +111,15 @@ class MainWindow(val app: App) : JFrame(), ActionListener {
 
         locationLabel = JLabel("Location")
         locationLabel.horizontalAlignment = SwingConstants.CENTER
-        locationLabel.bounds = Rectangle(223, 50, 301, 50)
+        locationLabel.bounds = Rectangle(250, 50, 300, 50)
         locationLabel.alignmentX = Component.CENTER_ALIGNMENT
         locationLabel.font = baseFont
         add(locationLabel)
 
         gameFrame = JLabel()
         gameFrame.horizontalAlignment = SwingConstants.CENTER
-        gameFrame.bounds = Rectangle(223, 50, 301, 301)
+        gameFrame.bounds = Rectangle(250, 50, 300, 300)
+        gameFrame.border = BorderFactory.createLineBorder(Color.lightGray, 1, true)
         gameFrame.font = baseFont
         add(gameFrame)
 
@@ -139,25 +148,25 @@ class MainWindow(val app: App) : JFrame(), ActionListener {
         add(downButton)
 
         xButton = JButton("X")
-        xButton.bounds = Rectangle(665,125,50,50)
+        xButton.bounds = Rectangle(650,125,50,50)
         xButton.font = baseFont
         xButton.addActionListener(this)     // Handle any clicks
         add(xButton)
 
         yButton = JButton("Y")
-        yButton.bounds = Rectangle(615,175,50,50)
+        yButton.bounds = Rectangle(600,175,50,50)
         yButton.font = baseFont
         yButton.addActionListener(this)     // Handle any clicks
         add(yButton)
 
         aButton = JButton("A")
-        aButton.bounds = Rectangle(715,175,50,50)
+        aButton.bounds = Rectangle(700,175,50,50)
         aButton.font = baseFont
         aButton.addActionListener(this)     // Handle any clicks
         add(aButton)
 
         bButton = JButton("B")
-        bButton.bounds = Rectangle(665,225,50,50)
+        bButton.bounds = Rectangle(650,225,50,50)
         bButton.font = baseFont
         bButton.addActionListener(this)     // Handle any clicks
         add(bButton)
@@ -168,8 +177,18 @@ class MainWindow(val app: App) : JFrame(), ActionListener {
      * Update the UI controls based on the current state
      * of the application model
      */
-    fun updateView() {
+    private fun updateView() {
+        // Disable buttons when not usable
+        if (dirAvailable(0)) leftButton.isEnabled  = true else leftButton.isEnabled  = false
+        if (dirAvailable(1)) upButton.isEnabled    = true else upButton.isEnabled    = false
+        if (dirAvailable(2)) rightButton.isEnabled = true else rightButton.isEnabled = false
+        if (dirAvailable(3)) downButton.isEnabled  = true else downButton.isEnabled  = false
 
+        locationLabel.text = app.locations[app.currentLocation].name
+    }
+
+    private fun dirAvailable(dir: Int): Boolean{
+        return app.locations[app.currentLocation].connections[dir] != null
     }
 
     /**
@@ -179,11 +198,12 @@ class MainWindow(val app: App) : JFrame(), ActionListener {
      */
     override fun actionPerformed(e: ActionEvent?) {
         when (e?.source) {
-            upButton -> {
-                app.updateClickCount()
-                updateView()
-            }
+            leftButton -> app.travel(0)
+            upButton -> app.travel(1)
+            rightButton -> app.travel(2)
+            downButton -> app.travel(3)
         }
+        updateView()
     }
 
 }
