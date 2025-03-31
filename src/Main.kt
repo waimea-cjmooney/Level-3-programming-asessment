@@ -46,66 +46,84 @@ class App {
     init {
         // Add Locations to the list
         // (left, up, right, down)
-        locations.add(Location("The Conveyor", null, mutableListOf(CORRIDOR, 4, 3, null))) //0
+        locations.add(Location("The Conveyor",  null, mutableListOf(CORRIDOR, 4, 3, null)))         // 0
         locations[0].discovered = true
-        locations.add(Location("Corridor",     null, mutableListOf(null, 5, CONVEYOR, 2))) //1
-        locations.add(Location("Broom Closet", null, mutableListOf(null, CORRIDOR, null, null))) //2
-        locations.add(Location("Storage Room", null, mutableListOf(CONVEYOR, null, null, null))) //3
-        locations.add(Location("Corridor",     null, mutableListOf(5, null, 17, CONVEYOR))) //4
-        locations.add(Location("location5",    null, mutableListOf(null, 6, 4, 1))) //5
-        locations.add(Location("location6",    null, mutableListOf(7, 22, null, 5))) //6
-        locations.add(Location("location7",    null, mutableListOf(null, null, 6, 8))) //7
-        locations.add(Location("location8",    null, mutableListOf(9, 7, null, null))) //8
-        locations.add(Location("location9",    null, mutableListOf(null, 12, 8, 10))) //9
-        locations.add(Location("location10",   null, mutableListOf(11, 9, null, null))) //10
-        locations.add(Location("location11",   null, mutableListOf(null, 12, 10, 25))) //11
-        locations.add(Location("location12",   null, mutableListOf(11, 13, null, 9))) //12
-        locations.add(Location("location13",   null, mutableListOf(null, null, 14, 12))) //13
-        locations.add(Location("location14",   null, mutableListOf(13, 24, 15, null))) //14
-        locations.add(Location("location15",   null, mutableListOf(14, 16, null, null))) //15
-        locations.add(Location("location16",   null, mutableListOf(24, null, 22, 15))) //16
-        locations.add(Location("location17",   null, mutableListOf(4, 20, 18, null))) //17
-        locations.add(Location("location18",   null, mutableListOf(17, 19, null, null))) //18
-        locations.add(Location("location19",   null, mutableListOf(20, 21, null, 18))) //19
-        locations.add(Location("location20",   null, mutableListOf(22, null, 19, 17))) //20
-        locations.add(Location("location21",   null, mutableListOf(22, 23, null, 19))) //21
-        locations.add(Location("location22",   null, mutableListOf(6, 16, 21, 20))) //22
-        locations.add(Location("location23",   null, mutableListOf(null, null, null, 21))) //23
-        locations.add(Location("location24",   null, mutableListOf(null, null, 16, 14))) //24
-        locations.add(Location("location25",   null, mutableListOf(null, 11, null, null))) //25
+        locations.add(Location("Corridor",      null, mutableListOf(null, 5, CONVEYOR, 2)))         // 1
+        locations.add(Location("Broom Closet",  null, mutableListOf(null, CORRIDOR, null, null)))   // 2
+        locations.add(Location("Storage Room",  null, mutableListOf(CONVEYOR, null, null, null)))   // 3
+        locations.add(Location("Corridor",      null, mutableListOf(5, null, 17, CONVEYOR)))        // 4
+        locations.add(Location("location5",     null, mutableListOf(null, 6, 4, 1)))                // 5
+        locations.add(Location("location6",     null, mutableListOf(7, 22, null, 5)))               // 6
+        locations.add(Location("location7",     null, mutableListOf(null, null, 6, 8)))             // 7
+        locations.add(Location("location8",     null, mutableListOf(9, 7, null, null)))             // 8
+        locations.add(Location("location9",     null, mutableListOf(null, 12, 8, 10)))              // 9
+        locations.add(Location("location10",    null, mutableListOf(11, 9, null, null)))            // 10
+        locations.add(Location("location11",    null, mutableListOf(null, 12, 10, 25)))             // 11
+        locations.add(Location("location12",    null, mutableListOf(11, 13, null, 9)))              // 12
+        locations.add(Location("location13",    null, mutableListOf(null, null, 14, 12)))           // 13
+        locations.add(Location("location14",    null, mutableListOf(13, 24, 15, null)))             // 14
+        locations.add(Location("location15",    null, mutableListOf(14, 16, null, null)))           // 15
+        locations.add(Location("location16",    null, mutableListOf(24, null, 22, 15)))             // 16
+        locations.add(Location("location17",    null, mutableListOf(4, 20, 18, null)))              // 17
+        locations.add(Location("location18",    null, mutableListOf(17, 19, null, null)))           // 18
+        locations.add(Location("location19",    null, mutableListOf(20, 21, null, 18)))             // 19
+        locations.add(Location("location20",    null, mutableListOf(22, null, 19, 17)))             // 20
+        locations.add(Location("location21",    null, mutableListOf(22, 23, null, 19)))             // 21
+        locations.add(Location("location22",    null, mutableListOf(6, 16, 21, 20)))                // 22
+        locations.add(Location("Main Entrance", null, mutableListOf(null, null, null, 21)))         // 23
+        locations.add(Location("location24",    null, mutableListOf(null, null, 16, 14)))           // 24
+        locations.add(Location("Vine Room",     null, mutableListOf(null, 11, null, null)))         // 25
     }
 
     fun travel(dir: Int){
-        currentLocation = locations[currentLocation].connections[dir]!!
-        println("User traveled to ${locations[currentLocation].name}")
-        println(locations[currentLocation].discovered.toString())
-        locations[currentLocation].discovered = true
+        if (dirAvailable(dir)){
+                currentLocation = locations[currentLocation].connections[dir]!!
+                println("User traveled to ${locations[currentLocation].name}")
+                println(locations[currentLocation].discovered.toString())
+                locations[currentLocation].discovered = true
+        }
     }
 
-    fun dirAvailable(dir: Int): Boolean{
-        return locations[currentLocation].connections[dir] != null
-    }
-
-    fun whatAtDir(dir: Int): String{
-        // Return "Nothing" if there is no connection here
-        if (!dirAvailable(dir)) return "Nothing"
-
-        // Return name of a location if it has been discovered
-        // This was so hard to bugfix :=(
-        return if (locations[locations[currentLocation].connections[dir]!!].discovered) {
-            locations[locations[currentLocation].connections[dir]!!].name
+    fun dirAvailable(dir: Int, overrideLocks: Boolean = false): Boolean{
+        return if (overrideLocks) {
+            locations[currentLocation].connections[dir] != null
         } else {
-            "???"
+            if (whatAtDir(dir, true) != "Nothing") {
+                when (locations[whatAtDir(dir, true).toInt()].type) {
+                    "open" -> true
+                    "locked" -> false
+                    else -> false
+                }
+            } else false
+        }
+    }
+
+    fun whatAtDir(dir: Int, returnIndex: Boolean = false): String{
+        if (!returnIndex){
+            // Return "Nothing" if there is no connection here
+            if (locations[currentLocation].connections[dir] == null) return "Nothing"
+
+            // Return name of a location if it has been discovered
+            // This was so hard to bugfix :(
+            return if (locations[locations[currentLocation].connections[dir]!!].discovered) {
+                locations[locations[currentLocation].connections[dir]!!].name
+            } else {
+                "???"
+            }
+        }
+        else {
+            // Return the index or "Nothing" instead of name
+            return if (locations[currentLocation].connections[dir] == null) locations[locations[currentLocation].connections[dir]!!].toString() else "Nothing"
         }
     }
 }
 
-class Location(val name: String, val desc: String? = null, val connections: MutableList<Int?>, val items: MutableList<Item?> = mutableListOf()){
+class Location(val name: String, val desc: String? = null, val connections: MutableList<Int?>, val items: MutableList<Item?> = mutableListOf(), val type: String = "open"){
     // Locations can only have four connections, (left, up, right, down)
     var discovered: Boolean = false
 }
 
-class Item(val name: String){}
+class Item(val name: String, val desc: String?){}
 
 /**
  * Main UI window (view)
@@ -241,7 +259,7 @@ class MainWindow(val app: App) : JFrame(), ActionListener {
         if (app.dirAvailable(3)) downButton.isEnabled  = true else downButton.isEnabled  = false
 
         locationLabel.text = app.locations[app.currentLocation].name
-        desc.text = "<html>${if(app.locations[app.currentLocation].desc != null) app.locations[app.currentLocation].desc else ""}<br/>To West: ${app.whatAtDir(0)}<br/>To North: ${app.whatAtDir(1)}<br/>To East: ${app.whatAtDir(2)}<br/>To South: ${app.whatAtDir(3)}</html>"
+        desc.text = "<html>To West: ${app.whatAtDir(0)}<br/>To North: ${app.whatAtDir(1)}<br/>To East: ${app.whatAtDir(2)}<br/>To South: ${app.whatAtDir(3)}</html>"
     }
 
 
