@@ -86,39 +86,39 @@ class App {
 
     fun dirAvailable(dir: Int, overrideLocks: Boolean = false): Boolean{
         return if (overrideLocks) {
+            // This direction exists (Could be Locked)
             locations[currentLocation].connections[dir] != null
         } else {
-            if (whatAtDir(dir, true) != "Nothing") {
-                when (locations[whatAtDir(dir, true).toInt()].type) {
-                    "open" -> true
-                    "locked" -> false
-                    else -> false
-                }
-            } else false
+            if (whatAtDir(dir) != "Nothing") {
+                // Direction exists but return false if locked
+                return locations[whatAtDir(dir, true).toInt()].open
+            } else {
+                // Direction unavailable
+                return false
+            }
         }
     }
 
     fun whatAtDir(dir: Int, returnIndex: Boolean = false): String{
-        if (!returnIndex){
-            // Return "Nothing" if there is no connection here
-            if (locations[currentLocation].connections[dir] == null) return "Nothing"
+        // Return "Nothing" if there is no connection here
+        if (locations[currentLocation].connections[dir] == null) return "Nothing"
 
+        return if (!returnIndex){
             // Return name of a location if it has been discovered
             // This was so hard to bugfix :(
-            return if (locations[locations[currentLocation].connections[dir]!!].discovered) {
+            if (locations[locations[currentLocation].connections[dir]!!].discovered) {
                 locations[locations[currentLocation].connections[dir]!!].name
             } else {
                 "???"
             }
-        }
-        else {
-            // Return the index or "Nothing" instead of name
-            return if (locations[currentLocation].connections[dir] == null) locations[locations[currentLocation].connections[dir]!!].toString() else "Nothing"
+        } else {
+            // Return the index
+            locations[currentLocation].connections[dir]!!.toString()
         }
     }
 }
 
-class Location(val name: String, val desc: String? = null, val connections: MutableList<Int?>, val items: MutableList<Item?> = mutableListOf(), val type: String = "open"){
+class Location(val name: String, val desc: String? = null, val connections: MutableList<Int?>, val items: MutableList<Item?> = mutableListOf(), val open: Boolean = true){
     // Locations can only have four connections, (left, up, right, down)
     var discovered: Boolean = false
 }
@@ -253,10 +253,10 @@ class MainWindow(val app: App) : JFrame(), ActionListener {
      */
     private fun updateView() {
         // Disable buttons when not usable
-        if (app.dirAvailable(0)) leftButton.isEnabled  = true else leftButton.isEnabled  = false
-        if (app.dirAvailable(1)) upButton.isEnabled    = true else upButton.isEnabled    = false
-        if (app.dirAvailable(2)) rightButton.isEnabled = true else rightButton.isEnabled = false
-        if (app.dirAvailable(3)) downButton.isEnabled  = true else downButton.isEnabled  = false
+        if (app.dirAvailable(0, true)) leftButton.isEnabled  = true else leftButton.isEnabled  = false
+        if (app.dirAvailable(1, true)) upButton.isEnabled    = true else upButton.isEnabled    = false
+        if (app.dirAvailable(2, true)) rightButton.isEnabled = true else rightButton.isEnabled = false
+        if (app.dirAvailable(3, true)) downButton.isEnabled  = true else downButton.isEnabled  = false
 
         locationLabel.text = app.locations[app.currentLocation].name
         desc.text = "<html>To West: ${app.whatAtDir(0)}<br/>To North: ${app.whatAtDir(1)}<br/>To East: ${app.whatAtDir(2)}<br/>To South: ${app.whatAtDir(3)}</html>"
