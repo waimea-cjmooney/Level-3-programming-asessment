@@ -38,6 +38,7 @@ class App {
     // Constants defining any key values
     val locations = mutableListOf<Location>()
     var currentLocation = 0
+    val keys = mutableListOf(0)
 
     // Location Indices
     val CONVEYOR = 0
@@ -48,9 +49,14 @@ class App {
         // (left, up, right, down)
         locations.add(Location("The Conveyor",  null, mutableListOf(CORRIDOR, 4, 3, null)))         // 0
         locations[0].discovered = true
+
         locations.add(Location("Corridor",      null, mutableListOf(null, 5, CONVEYOR, 2)))         // 1
         locations.add(Location("Broom Closet",  null, mutableListOf(null, CORRIDOR, null, null)))   // 2
+        locations[2].items.add(Item("small key with the number 1 engraved on it", "key", 1))
+
         locations.add(Location("Storage Room",  null, mutableListOf(CONVEYOR, null, null, null)))   // 3
+        locations[3].keyRequired = 1
+
         locations.add(Location("Corridor",      null, mutableListOf(5, null, 17, CONVEYOR)))        // 4
         locations.add(Location("location5",     null, mutableListOf(null, 6, 4, 1)))                // 5
         locations.add(Location("location6",     null, mutableListOf(7, 22, null, 5)))               // 6
@@ -77,10 +83,10 @@ class App {
 
     fun travel(dir: Int){
         if (dirAvailable(dir)){
-                currentLocation = locations[currentLocation].connections[dir]!!
-                println("User traveled to ${locations[currentLocation].name}")
-                println(locations[currentLocation].discovered.toString())
-                locations[currentLocation].discovered = true
+            currentLocation = locations[currentLocation].connections[dir]!!
+            locations[currentLocation].discovered = true
+
+            println("User traveled to ${locations[currentLocation].name}")
         }
     }
 
@@ -90,8 +96,8 @@ class App {
             locations[currentLocation].connections[dir] != null
         } else {
             if (whatAtDir(dir) != "Nothing") {
-                // Direction exists but return false if locked
-                return locations[whatAtDir(dir, true).toInt()].open
+                // Direction exists, and return true if unlocked else false
+                return keys.contains(locations[whatAtDir(dir, true).toInt()].keyRequired)
             } else {
                 // Direction unavailable
                 return false
@@ -118,12 +124,14 @@ class App {
     }
 }
 
-class Location(val name: String, val desc: String? = null, val connections: MutableList<Int?>, val items: MutableList<Item?> = mutableListOf(), val open: Boolean = true){
+class Location(val name: String, val desc: String? = null, val connections: MutableList<Int?>, val items: MutableList<Item?> = mutableListOf(), var keyRequired: Int = 0){
     // Locations can only have four connections, (left, up, right, down)
     var discovered: Boolean = false
 }
 
-class Item(val name: String, val desc: String?){}
+class Item(val name: String, val type: String?, val data: Int? = null){
+
+}
 
 /**
  * Main UI window (view)
@@ -259,7 +267,7 @@ class MainWindow(val app: App) : JFrame(), ActionListener {
         if (app.dirAvailable(3, true)) downButton.isEnabled  = true else downButton.isEnabled  = false
 
         locationLabel.text = app.locations[app.currentLocation].name
-        desc.text = "<html>To West: ${app.whatAtDir(0)}<br/>To North: ${app.whatAtDir(1)}<br/>To East: ${app.whatAtDir(2)}<br/>To South: ${app.whatAtDir(3)}</html>"
+        desc.text = "<html>${if (app.locations[app.currentLocation].items.isNotEmpty()) "A ${app.locations[app.currentLocation].items[0]!!.name} lays on the ground [X] Pick up" else "Nothing in here"}<br/>To West: ${app.whatAtDir(0)}<br/>To North: ${app.whatAtDir(1)}<br/>To East: ${app.whatAtDir(2)}<br/>To South: ${app.whatAtDir(3)}</html>"
     }
 
 
@@ -274,6 +282,12 @@ class MainWindow(val app: App) : JFrame(), ActionListener {
             upButton    -> app.travel(1)
             rightButton -> app.travel(2)
             downButton  -> app.travel(3)
+            xButton     -> {
+                if (app.locations[app.currentLocation].items.isNotEmpty()) {
+                    app.keys.add(app.locations[app.currentLocation].items[0]!!.data!!)
+                    app.locations[app.currentLocation].items.removeAt(0)
+                }
+            }
         }
         updateView()
     }
