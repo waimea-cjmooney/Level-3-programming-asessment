@@ -52,7 +52,7 @@ class App {
 
         locations.add(Location("Corridor",      null, mutableListOf(null, 5, CONVEYOR, 2)))         // 1
         locations.add(Location("Broom Closet",  null, mutableListOf(null, CORRIDOR, null, null)))   // 2
-        locations[2].items.add(Item("small key with the number 1 engraved on it", "key", 1))
+        locations[2].items.add(Item("small key with the number 1 engraved in it", "key", 1))
 
         locations.add(Location("Storage Room",  null, mutableListOf(CONVEYOR, null, null, null)))   // 3
         locations[3].keyRequired = 1
@@ -284,7 +284,10 @@ class MainWindow(val app: App) : JFrame(), ActionListener {
             downButton  -> app.travel(3)
             xButton     -> {
                 if (app.locations[app.currentLocation].items.isNotEmpty()) {
-                    app.keys.add(app.locations[app.currentLocation].items[0]!!.data!!)
+                    // If the item is a key, add the key to the keys list
+                    if (app.locations[app.currentLocation].items[0]!!.type == "key"){
+                        app.keys.add(app.locations[app.currentLocation].items[0]!!.data!!)
+                    }
                     app.locations[app.currentLocation].items.removeAt(0)
                 }
             }
