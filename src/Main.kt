@@ -37,8 +37,9 @@ fun main() {
 class App {
     // Constants defining any key values
     val locations = mutableListOf<Location>()
-    var currentLocation = 0
     val keys = mutableListOf(0)
+    var currentLocation = 0
+    var lockedHere = false
 
     // Location Indices
     val CONVEYOR = 0
@@ -56,6 +57,7 @@ class App {
 
         locations.add(Location("Storage Room",  null, mutableListOf(CONVEYOR, null, null, null)))   // 3
         locations[3].keyRequired = 1
+        locations[3].items.add(Item("small key with the number 2 engraved in it", "key", 2))
 
         locations.add(Location("Corridor",      null, mutableListOf(5, null, 17, CONVEYOR)))        // 4
         locations.add(Location("location5",     null, mutableListOf(null, 6, 4, 1)))                // 5
@@ -85,13 +87,16 @@ class App {
         if (dirAvailable(dir)){
             currentLocation = locations[currentLocation].connections[dir]!!
             locations[currentLocation].discovered = true
+            lockedHere = false
 
             println("User traveled to ${locations[currentLocation].name}")
+        } else if (dirAvailable(dir, true)) {
+            lockedHere = true
         }
     }
 
-    fun dirAvailable(dir: Int, overrideLocks: Boolean = false): Boolean{
-        return if (overrideLocks) {
+    fun dirAvailable(dir: Int, ignoreLocks: Boolean = false): Boolean{
+        return if (ignoreLocks) {
             // This direction exists (Could be Locked)
             locations[currentLocation].connections[dir] != null
         } else {
@@ -262,12 +267,23 @@ class MainWindow(val app: App) : JFrame(), ActionListener {
     private fun updateView() {
         // Disable buttons when not usable
         if (app.dirAvailable(0, true)) leftButton.isEnabled  = true else leftButton.isEnabled  = false
+        leftButton.text = if (app.dirAvailable(0, false) && app.dirAvailable(0, true)) "⇠" else "\uD83D\uDD12"
+
         if (app.dirAvailable(1, true)) upButton.isEnabled    = true else upButton.isEnabled    = false
+        upButton.text = if (app.dirAvailable(1, false) && app.dirAvailable(1, true)) "⇡" else "\uD83D\uDD12"
+
         if (app.dirAvailable(2, true)) rightButton.isEnabled = true else rightButton.isEnabled = false
+        rightButton.text = if (app.dirAvailable(2, false) && app.dirAvailable(2, true)) "⇢" else "\uD83D\uDD12"
+
         if (app.dirAvailable(3, true)) downButton.isEnabled  = true else downButton.isEnabled  = false
+        downButton.text = if (app.dirAvailable(3, false) && app.dirAvailable(3, true)) "⇣" else "\uD83D\uDD12"
 
         locationLabel.text = app.locations[app.currentLocation].name
-        desc.text = "<html>${if (app.locations[app.currentLocation].items.isNotEmpty()) "A ${app.locations[app.currentLocation].items[0]!!.name} lays on the ground [X] Pick up" else "Nothing in here"}<br/>To West: ${app.whatAtDir(0)}<br/>To North: ${app.whatAtDir(1)}<br/>To East: ${app.whatAtDir(2)}<br/>To South: ${app.whatAtDir(3)}</html>"
+        desc.text = "<html>"
+        desc.text += if (app.lockedHere) "The door doesn't budge${if (app.keys.lastIndex != 0) ", and none of your keys fit in the lock." else "."}<br/>" else ""
+        desc.text += "${if (app.locations[app.currentLocation].items.isNotEmpty()) "A ${app.locations[app.currentLocation].items[0]!!.name} lays on the ground [X] Pick up" else "Nothing in here"}<br/>"
+        desc.text += "To West: ${app.whatAtDir(0)}<br/>To North: ${app.whatAtDir(1)}<br/>To East: ${app.whatAtDir(2)}<br/>To South: ${app.whatAtDir(3)}"
+        desc.text += "</html>"
     }
 
 
