@@ -51,7 +51,7 @@ class App {
         locations.add(Location("The Conveyor",  null, mutableListOf(CORRIDOR, 4, 3, null)))         // 0
         locations[0].discovered = true
 
-        locations.add(Location("Corridor",      null, mutableListOf(null, 5, CONVEYOR, 2)))         // 1
+        locations.add(Location("Back Corridor",      null, mutableListOf(null, 5, CONVEYOR, 2)))    // 1
         locations.add(Location("Broom Closet",  null, mutableListOf(null, CORRIDOR, null, null)))   // 2
         locations[2].items.add(Item("small key with the number 1 engraved in it", "key", 1))
 
@@ -60,27 +60,55 @@ class App {
         locations[3].items.add(Item("small key with the number 2 engraved in it", "key", 2))
 
         locations.add(Location("Corridor",      null, mutableListOf(5, null, 17, CONVEYOR)))        // 4
+        locations[4].keyRequired = 2
+
         locations.add(Location("location5",     null, mutableListOf(null, 6, 4, 1)))                // 5
+        locations[5].keyRequired = 2
+
         locations.add(Location("location6",     null, mutableListOf(7, 22, null, 5)))               // 6
+        locations[6].keyRequired = 3
+
         locations.add(Location("location7",     null, mutableListOf(null, null, 6, 8)))             // 7
         locations.add(Location("location8",     null, mutableListOf(9, 7, null, null)))             // 8
         locations.add(Location("location9",     null, mutableListOf(null, 12, 8, 10)))              // 9
         locations.add(Location("location10",    null, mutableListOf(11, 9, null, null)))            // 10
+        locations[10].items.add(Item("small key with the number 4 engraved in it", "key", 4))
+
         locations.add(Location("location11",    null, mutableListOf(null, 12, 10, 25)))             // 11
+        locations[11].keyRequired = 4
+
         locations.add(Location("location12",    null, mutableListOf(11, 13, null, 9)))              // 12
+        locations[12].keyRequired = 4
+
         locations.add(Location("location13",    null, mutableListOf(null, null, 14, 12)))           // 13
         locations.add(Location("location14",    null, mutableListOf(13, 24, 15, null)))             // 14
         locations.add(Location("location15",    null, mutableListOf(14, 16, null, null)))           // 15
         locations.add(Location("location16",    null, mutableListOf(24, null, 22, 15)))             // 16
         locations.add(Location("location17",    null, mutableListOf(4, 20, 18, null)))              // 17
         locations.add(Location("location18",    null, mutableListOf(17, 19, null, null)))           // 18
+        locations[18].keyRequired = 3
+
         locations.add(Location("location19",    null, mutableListOf(20, 21, null, 18)))             // 19
+        locations[19].keyRequired = 3
+
         locations.add(Location("location20",    null, mutableListOf(22, null, 19, 17)))             // 20
+        locations[20].items.add(Item("small key with the number 3 engraved in it", "key", 3))
+
         locations.add(Location("location21",    null, mutableListOf(22, 23, null, 19)))             // 21
+        locations[21].keyRequired = 5
+        locations[21].items.add(Item("large key card with the number 6 printed on it", "key", 6))
+
         locations.add(Location("location22",    null, mutableListOf(6, 16, 21, 20)))                // 22
+        locations[22].keyRequired = 5
+
         locations.add(Location("Main Entrance", null, mutableListOf(null, null, null, 21)))         // 23
+        locations[23].keyRequired = 6
+
         locations.add(Location("location24",    null, mutableListOf(null, null, 16, 14)))           // 24
+        locations[24].items.add(Item("small key with the number 5 engraved in it", "key", 5))
+
         locations.add(Location("Vine Room",     null, mutableListOf(null, 11, null, null)))         // 25
+        locations[25].keyRequired = 6
     }
 
     fun travel(dir: Int){
@@ -134,9 +162,7 @@ class Location(val name: String, val desc: String? = null, val connections: Muta
     var discovered: Boolean = false
 }
 
-class Item(val name: String, val type: String?, val data: Int? = null){
-
-}
+class Item(val name: String, val type: String?, val data: Int? = null)
 
 /**
  * Main UI window (view)
@@ -254,9 +280,9 @@ class MainWindow(val app: App) : JFrame(), ActionListener {
         add(bButton)
 
         desc = JLabel()
-        desc.bounds = Rectangle(250, 100, 300, 300)
-        locationLabel.alignmentX = Component.TOP_ALIGNMENT
-        desc.font = Font(Font.SANS_SERIF, Font.PLAIN, 10)
+        desc.bounds = Rectangle(255, 20, 300, 300)
+        locationLabel.alignmentY = Component.TOP_ALIGNMENT
+        desc.font = Font(Font.SANS_SERIF, Font.PLAIN, 13)
         add(desc)
     }
 
@@ -267,22 +293,23 @@ class MainWindow(val app: App) : JFrame(), ActionListener {
     private fun updateView() {
         // Disable buttons when not usable
         if (app.dirAvailable(0, true)) leftButton.isEnabled  = true else leftButton.isEnabled  = false
-        leftButton.text = if (app.dirAvailable(0, false) && app.dirAvailable(0, true)) "⇠" else "\uD83D\uDD12"
+        leftButton.text = if (!app.dirAvailable(0, false) && app.dirAvailable(0, true)) "\uD83D\uDD12" else "⇠"
 
         if (app.dirAvailable(1, true)) upButton.isEnabled    = true else upButton.isEnabled    = false
-        upButton.text = if (app.dirAvailable(1, false) && app.dirAvailable(1, true)) "⇡" else "\uD83D\uDD12"
+        upButton.text = if (!app.dirAvailable(1, false) && app.dirAvailable(1, true)) "\uD83D\uDD12" else "⇡"
 
         if (app.dirAvailable(2, true)) rightButton.isEnabled = true else rightButton.isEnabled = false
-        rightButton.text = if (app.dirAvailable(2, false) && app.dirAvailable(2, true)) "⇢" else "\uD83D\uDD12"
+        rightButton.text = if (!app.dirAvailable(2, false) && app.dirAvailable(2, true)) "\uD83D\uDD12" else "⇢"
 
         if (app.dirAvailable(3, true)) downButton.isEnabled  = true else downButton.isEnabled  = false
-        downButton.text = if (app.dirAvailable(3, false) && app.dirAvailable(3, true)) "⇣" else "\uD83D\uDD12"
+        downButton.text = if (!app.dirAvailable(3, false) && app.dirAvailable(3, true)) "\uD83D\uDD12" else "⇣"
 
         locationLabel.text = app.locations[app.currentLocation].name
         desc.text = "<html>"
         desc.text += if (app.lockedHere) "The door doesn't budge${if (app.keys.lastIndex != 0) ", and none of your keys fit in the lock." else "."}<br/>" else ""
         desc.text += "${if (app.locations[app.currentLocation].items.isNotEmpty()) "A ${app.locations[app.currentLocation].items[0]!!.name} lays on the ground [X] Pick up" else "Nothing in here"}<br/>"
-        desc.text += "To West: ${app.whatAtDir(0)}<br/>To North: ${app.whatAtDir(1)}<br/>To East: ${app.whatAtDir(2)}<br/>To South: ${app.whatAtDir(3)}"
+        desc.text += "To West: ${app.whatAtDir(0)}<br/>To North: ${app.whatAtDir(1)}<br/>To East: ${app.whatAtDir(2)}<br/>To South: ${app.whatAtDir(3)}<br/>"
+        if (app.keys.size > 1) for (i in app.keys) desc.text += if (i != 0) app.keys[i].toString() + " " else "Keys: "
         desc.text += "</html>"
     }
 
@@ -312,4 +339,3 @@ class MainWindow(val app: App) : JFrame(), ActionListener {
     }
 
 }
-
