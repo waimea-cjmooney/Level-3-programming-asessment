@@ -42,24 +42,24 @@ class App {
     var lockedHere = false
 
     // Location Indices
-    val CONVEYOR = 0
-    val CORRIDOR = 1
+    private val conveyor = 0
+    private val corridor = 1
 
     init {
         // Add Locations to the list
         // (left, up, right, down)
-        locations.add(Location("The Conveyor",  null, mutableListOf(CORRIDOR, 4, 3, null)))         // 0
+        locations.add(Location("The Conveyor",  "Test", mutableListOf(corridor, 4, 3, null)))         // 0
         locations[0].discovered = true
 
-        locations.add(Location("Back Corridor",      null, mutableListOf(null, 5, CONVEYOR, 2)))    // 1
-        locations.add(Location("Broom Closet",  null, mutableListOf(null, CORRIDOR, null, null)))   // 2
+        locations.add(Location("Back Corridor",      null, mutableListOf(null, 5, conveyor, 2)))    // 1
+        locations.add(Location("Broom Closet",  null, mutableListOf(null, corridor, null, null)))   // 2
         locations[2].items.add(Item("small key with the number 1 engraved in it", "key", 1))
 
-        locations.add(Location("Storage Room",  null, mutableListOf(CONVEYOR, null, null, null)))   // 3
+        locations.add(Location("Storage Room",  null, mutableListOf(conveyor, null, null, null)))   // 3
         locations[3].keyRequired = 1
         locations[3].items.add(Item("small key with the number 2 engraved in it", "key", 2))
 
-        locations.add(Location("Corridor",      null, mutableListOf(5, null, 17, CONVEYOR)))        // 4
+        locations.add(Location("Corridor",      null, mutableListOf(5, null, 17, conveyor)))        // 4
         locations[4].keyRequired = 2
 
         locations.add(Location("location5",     null, mutableListOf(null, 6, 4, 1)))                // 5
@@ -107,7 +107,7 @@ class App {
         locations.add(Location("location24",    null, mutableListOf(null, null, 16, 14)))           // 24
         locations[24].items.add(Item("small key with the number 5 engraved in it", "key", 5))
 
-        locations.add(Location("Vine Room",     null, mutableListOf(null, 11, null, null)))         // 25
+        locations.add(Location("Vine Room",     "How did you get here?", mutableListOf(null, 11, null, null)))         // 25
         locations[25].keyRequired = 6
     }
 
@@ -169,7 +169,7 @@ class Item(val name: String, val type: String?, val data: Int? = null)
  * Defines the UI and responds to events
  * The app model should be passed as an argument
  */
-class MainWindow(val app: App) : JFrame(), ActionListener {
+class MainWindow(private val app: App) : JFrame(), ActionListener {
 
     // Fields to hold the UI elements
     private lateinit var locationLabel: JLabel
@@ -292,23 +292,35 @@ class MainWindow(val app: App) : JFrame(), ActionListener {
      */
     private fun updateView() {
         // Disable buttons when not usable
-        if (app.dirAvailable(0, true)) leftButton.isEnabled  = true else leftButton.isEnabled  = false
+        leftButton.isEnabled = app.dirAvailable(0, true)
         leftButton.text = if (!app.dirAvailable(0, false) && app.dirAvailable(0, true)) "\uD83D\uDD12" else "⇠"
 
-        if (app.dirAvailable(1, true)) upButton.isEnabled    = true else upButton.isEnabled    = false
+        upButton.isEnabled = app.dirAvailable(1, true)
         upButton.text = if (!app.dirAvailable(1, false) && app.dirAvailable(1, true)) "\uD83D\uDD12" else "⇡"
 
-        if (app.dirAvailable(2, true)) rightButton.isEnabled = true else rightButton.isEnabled = false
+        rightButton.isEnabled = app.dirAvailable(2, true)
         rightButton.text = if (!app.dirAvailable(2, false) && app.dirAvailable(2, true)) "\uD83D\uDD12" else "⇢"
 
-        if (app.dirAvailable(3, true)) downButton.isEnabled  = true else downButton.isEnabled  = false
+        downButton.isEnabled = app.dirAvailable(3, true)
         downButton.text = if (!app.dirAvailable(3, false) && app.dirAvailable(3, true)) "\uD83D\uDD12" else "⇣"
 
+        // Shows name of room
         locationLabel.text = app.locations[app.currentLocation].name
+
         desc.text = "<html>"
+        // If the user tries a locked door
         desc.text += if (app.lockedHere) "The door doesn't budge${if (app.keys.lastIndex != 0) ", and none of your keys fit in the lock." else "."}<br/>" else ""
+
+        // Room description
+        desc.text += if (app.locations[app.currentLocation].desc != null) app.locations[app.currentLocation].desc + "<br/>" else ""
+
+        // Shows Items that are in the room
         desc.text += "${if (app.locations[app.currentLocation].items.isNotEmpty()) "A ${app.locations[app.currentLocation].items[0]!!.name} lays on the ground [X] Pick up" else "Nothing in here"}<br/>"
+
+        // Shows possible movement options as well as what those rooms are if the user has unlocked them
         desc.text += "To West: ${app.whatAtDir(0)}<br/>To North: ${app.whatAtDir(1)}<br/>To East: ${app.whatAtDir(2)}<br/>To South: ${app.whatAtDir(3)}<br/>"
+
+        // Shows keys you own
         if (app.keys.size > 1) for (i in app.keys) desc.text += if (i != 0) app.keys[i].toString() + " " else "Keys: "
         desc.text += "</html>"
     }
