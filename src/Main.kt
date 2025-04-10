@@ -101,7 +101,7 @@ class App {
         locations.add(Location("location22",    null, mutableListOf(6, 16, 21, 20)))                // 22
         locations[22].keyRequired = 5
 
-        locations.add(Location("Main Entrance", null, mutableListOf(null, null, null, 21)))         // 23
+        locations.add(Location("Main Entrance", null, mutableListOf(null, 26, null, 21)))         // 23
         locations[23].keyRequired = 6
 
         locations.add(Location("location24",    null, mutableListOf(null, null, 16, 14)))           // 24
@@ -112,7 +112,9 @@ class App {
     }
 
     fun travel(dir: Int){
-        if (dirAvailable(dir)){
+        if (locations[currentLocation].connections[dir] == 23){
+            println("GAME WIN")
+        } else if (dirAvailable(dir)){
             currentLocation = locations[currentLocation].connections[dir]!!
             locations[currentLocation].discovered = true
             lockedHere = false
