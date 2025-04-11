@@ -1,14 +1,14 @@
 /**
- * =====================================================================
+ * ==================================================================================
  * Programming Project for NCEA Level 3, Standard 91906
- * ---------------------------------------------------------------------
+ * ----------------------------------------------------------------------------------
  * Project Name:   PROJECT NAME HERE
  * Project Author: Corban Mooney
  * GitHub Repo:    https://github.com/waimea-cjmooney/Level-3-programming-assessment
- * ---------------------------------------------------------------------
+ * ----------------------------------------------------------------------------------
  * Notes:
  * PROJECT NOTES HERE
- * =====================================================================
+ * ==================================================================================
  */
 
 
@@ -41,25 +41,21 @@ class App {
     var currentLocation = 0
     var lockedHere = false
 
-    // Location Indices
-    private val conveyor = 0
-    private val corridor = 1
-
     init {
         // Add Locations to the list
         // (left, up, right, down)
-        locations.add(Location("The Conveyor",  "Test", mutableListOf(corridor, 4, 3, null)))         // 0
+        locations.add(Location("The Conveyor",  "Test", mutableListOf(1, 4, 3, null)))              // 0
         locations[0].discovered = true
 
-        locations.add(Location("Back Corridor",      null, mutableListOf(null, 5, conveyor, 2)))    // 1
-        locations.add(Location("Broom Closet",  null, mutableListOf(null, corridor, null, null)))   // 2
+        locations.add(Location("Back Corridor",      null, mutableListOf(null, 5, 0, 2)))           // 1
+        locations.add(Location("Broom Closet",  null, mutableListOf(null, 1, null, null)))          // 2
         locations[2].items.add(Item("small key with the number 1 engraved in it", "key", 1))
 
-        locations.add(Location("Storage Room",  null, mutableListOf(conveyor, null, null, null)))   // 3
+        locations.add(Location("Storage Room",  null, mutableListOf(0, null, null, null)))          // 3
         locations[3].keyRequired = 1
         locations[3].items.add(Item("small key with the number 2 engraved in it", "key", 2))
 
-        locations.add(Location("Corridor",      null, mutableListOf(5, null, 17, conveyor)))        // 4
+        locations.add(Location("Corridor",      null, mutableListOf(5, null, 17, 0)))               // 4
         locations[4].keyRequired = 2
 
         locations.add(Location("location5",     null, mutableListOf(null, 6, 4, 1)))                // 5
@@ -101,7 +97,7 @@ class App {
         locations.add(Location("location22",    null, mutableListOf(6, 16, 21, 20)))                // 22
         locations[22].keyRequired = 5
 
-        locations.add(Location("Main Entrance", null, mutableListOf(null, 26, null, 21)))         // 23
+        locations.add(Location("Main Entrance", null, mutableListOf(null, 26, null, 21)))           // 23
         locations[23].keyRequired = 6
 
         locations.add(Location("location24",    null, mutableListOf(null, null, 16, 14)))           // 24
