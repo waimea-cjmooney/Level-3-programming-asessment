@@ -43,7 +43,7 @@ class App {
 
     init {
         // Add Locations to the list
-        // (left, up, right, down)
+        // (west, north, east, south)
         locations.add(Location("The Conveyor",  "Test", mutableListOf(1, 4, 3, null)))              // 0
         locations[0].discovered = true
 
@@ -156,7 +156,7 @@ class App {
 }
 
 class Location(val name: String, val desc: String? = null, val connections: MutableList<Int?>, val items: MutableList<Item?> = mutableListOf(), var keyRequired: Int = 0){
-    // Locations can only have four connections, (left, up, right, down)
+    // Locations can only have four connections, (west, north, east, south)
     var discovered: Boolean = false
 }
 
