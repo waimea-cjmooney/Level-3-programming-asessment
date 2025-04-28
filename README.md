@@ -9,6 +9,7 @@ This is a programming project for **NCEA Level 3**, assessed against standard [9
 The project is written in the [Kotlin](https://kotlinlang.org) programming language and demonstrates a number of **complex programming techniques**:
 - Programming a graphical user interface (GUI)
 - Object-oriented programming (OOP) classes and objects
+- Using user-defined types
 
 ---
 
