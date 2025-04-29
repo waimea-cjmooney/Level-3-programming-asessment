@@ -47,7 +47,7 @@ class App {
     init {
         /**
         * Add Locations to the list
-        * Order of connections: (left, up, right, down)
+        * Order of connections: (west, north, east, south)
         */
         locations.add(Location("The Conveyor",  "Test", mutableListOf(1, 4, 3, null)))              // 0
         locations[0].discovered = true
