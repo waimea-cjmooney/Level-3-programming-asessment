@@ -38,39 +38,44 @@ class App {
     // Constants defining any key values
     val locations = mutableListOf<Location>()
     val keys = mutableListOf(0)
+    private val EXIT = 26
+
+    // Extra variables
     var currentLocation = 0
     var lockedHere = false
 
     init {
-        // Add Locations to the list
-        // (left, up, right, down)
+        /**
+        * Add Locations to the list
+        * Order of connections: (left, up, right, down)
+        */
         locations.add(Location("The Conveyor",  "Test", mutableListOf(1, 4, 3, null)))              // 0
         locations[0].discovered = true
 
-        locations.add(Location("Back Corridor",      null, mutableListOf(null, 5, 0, 2)))           // 1
-        locations.add(Location("Broom Closet",  null, mutableListOf(null, 1, null, null)))          // 2
+        locations.add(Location("Cleaning Corridor",      null, mutableListOf(null, 5, 0, 2)))       // 1
+        locations.add(Location("The Broom Closet",  null, mutableListOf(null, 1, null, null)))      // 2
         locations[2].items.add(Item("small key with the number 1 engraved in it", "key", 1))
 
         locations.add(Location("Storage Room",  null, mutableListOf(0, null, null, null)))          // 3
         locations[3].keyRequired = 1
         locations[3].items.add(Item("small key with the number 2 engraved in it", "key", 2))
 
-        locations.add(Location("Corridor",      null, mutableListOf(5, null, 17, 0)))               // 4
+        locations.add(Location("Left Corridor",      null, mutableListOf(5, null, 17, 0)))               // 4
         locations[4].keyRequired = 2
 
-        locations.add(Location("location5",     null, mutableListOf(null, 6, 4, 1)))                // 5
+        locations.add(Location("Right Corridor",     null, mutableListOf(null, 6, 4, 1)))                // 5
         locations[5].keyRequired = 2
 
-        locations.add(Location("location6",     null, mutableListOf(7, 22, null, 5)))               // 6
+        locations.add(Location("Break Room 1",     null, mutableListOf(7, 22, null, 5)))               // 6
         locations[6].keyRequired = 3
 
-        locations.add(Location("location7",     null, mutableListOf(null, null, 6, 8)))             // 7
+        locations.add(Location("Break Room 2",     null, mutableListOf(null, null, 6, 8)))             // 7
         locations.add(Location("location8",     null, mutableListOf(9, 7, null, null)))             // 8
         locations.add(Location("location9",     null, mutableListOf(null, 12, 8, 10)))              // 9
         locations.add(Location("location10",    null, mutableListOf(11, 9, null, null)))            // 10
         locations[10].items.add(Item("small key with the number 4 engraved in it", "key", 4))
 
-        locations.add(Location("location11",    null, mutableListOf(null, 12, 10, 25)))             // 11
+        locations.add(Location("Back Office",    null, mutableListOf(null, 12, 10, 25)))             // 11
         locations[11].keyRequired = 4
 
         locations.add(Location("location12",    null, mutableListOf(11, 13, null, 9)))              // 12
@@ -80,14 +85,14 @@ class App {
         locations.add(Location("location14",    null, mutableListOf(13, 24, 15, null)))             // 14
         locations.add(Location("location15",    null, mutableListOf(14, 16, null, null)))           // 15
         locations.add(Location("location16",    null, mutableListOf(24, null, 22, 15)))             // 16
-        locations.add(Location("location17",    null, mutableListOf(4, 20, 18, null)))              // 17
-        locations.add(Location("location18",    null, mutableListOf(17, 19, null, null)))           // 18
+        locations.add(Location("Product Office",    null, mutableListOf(4, 20, 18, null)))              // 17
+        locations.add(Location("Programming",    null, mutableListOf(17, 19, null, null)))           // 18
         locations[18].keyRequired = 3
 
-        locations.add(Location("location19",    null, mutableListOf(20, 21, null, 18)))             // 19
+        locations.add(Location("Complaints Office",    null, mutableListOf(20, 21, null, 18)))             // 19
         locations[19].keyRequired = 3
 
-        locations.add(Location("location20",    null, mutableListOf(22, null, 19, 17)))             // 20
+        locations.add(Location("Main Office",    null, mutableListOf(22, null, 19, 17)))             // 20
         locations[20].items.add(Item("small key with the number 3 engraved in it", "key", 3))
 
         locations.add(Location("location21",    null, mutableListOf(22, 23, null, 19)))             // 21
@@ -97,7 +102,7 @@ class App {
         locations.add(Location("location22",    null, mutableListOf(6, 16, 21, 20)))                // 22
         locations[22].keyRequired = 5
 
-        locations.add(Location("Main Entrance", null, mutableListOf(null, 26, null, 21)))           // 23
+        locations.add(Location("Main Entrance", null, mutableListOf(null, EXIT, null, 21)))           // 23
         locations[23].keyRequired = 6
 
         locations.add(Location("location24",    null, mutableListOf(null, null, 16, 14)))           // 24
@@ -108,7 +113,7 @@ class App {
     }
 
     fun travel(dir: Int){
-        if (locations[currentLocation].connections[dir] == 23){
+        if (locations[currentLocation].connections[dir] == EXIT){
             println("GAME WIN")
         } else if (dirAvailable(dir)){
             currentLocation = locations[currentLocation].connections[dir]!!
@@ -122,6 +127,7 @@ class App {
     }
 
     fun dirAvailable(dir: Int, ignoreLocks: Boolean = false): Boolean{
+        if (locations[currentLocation].connections[dir] == EXIT) return true
         return if (ignoreLocks) {
             // This direction exists (Could be Locked)
             locations[currentLocation].connections[dir] != null
@@ -138,19 +144,26 @@ class App {
 
     fun whatAtDir(dir: Int, returnIndex: Boolean = false): String{
         // Return "Nothing" if there is no connection here
-        if (locations[currentLocation].connections[dir] == null) return "Nothing"
+        return if (locations[currentLocation].connections[dir] == null) "Nothing"
 
-        return if (!returnIndex){
-            // Return name of a location if it has been discovered
-            // This was so hard to bugfix :(
-            if (locations[locations[currentLocation].connections[dir]!!].discovered) {
+        else if (!returnIndex){
+
+            if (locations[currentLocation].connections[dir] == EXIT) "Exit"
+
+            /**
+            * Return name of a location if it has been discovered
+            * This was so hard to bugfix :(
+            */
+            else if (locations[locations[currentLocation].connections[dir]!!].discovered) {
                 locations[locations[currentLocation].connections[dir]!!].name
             } else {
                 "???"
             }
         } else {
-            // Return the index
-            locations[currentLocation].connections[dir]!!.toString()
+            if (locations[currentLocation].connections[dir] == EXIT) "Nothing"
+
+            // Return the index as a string
+            else locations[currentLocation].connections[dir]!!.toString()
         }
     }
 }
@@ -183,9 +196,7 @@ class MainWindow(private val app: App) : JFrame(), ActionListener {
     private lateinit var desc: JLabel
 
 
-    /**
-     * Configure the UI and display it
-     */
+    // Configure the UI and display it
     init {
         configureWindow()               // Configure the window
         addControls()                   // Build the UI
@@ -196,9 +207,8 @@ class MainWindow(private val app: App) : JFrame(), ActionListener {
         updateView()                    // Initialise the UI
     }
 
-    /**
-     * Configure the main window
-     */
+
+    // Configure the main window
     private fun configureWindow() {
         title = "Kotlin Swing GUI Demo"
         contentPane.preferredSize = Dimension(800, 400)
@@ -209,9 +219,8 @@ class MainWindow(private val app: App) : JFrame(), ActionListener {
         pack()
     }
 
-    /**
-     * Populate the UI with UI controls
-     */
+
+    // Populate the UI with UI controls
     private fun addControls() {
         val baseFont = Font(Font.SANS_SERIF, Font.PLAIN, 36)
 
