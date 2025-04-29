@@ -169,7 +169,7 @@ class App {
 }
 
 class Location(val name: String, val desc: String? = null, val connections: MutableList<Int?>, val items: MutableList<Item?> = mutableListOf(), var keyRequired: Int = 0){
-    // Locations can only have four connections, (left, up, right, down)
+    // Locations can only have four connections, (west, north, east, south)
     var discovered: Boolean = false
 }
 
