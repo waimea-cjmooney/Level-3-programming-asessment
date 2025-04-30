@@ -14,8 +14,10 @@
 
 
 import com.formdev.flatlaf.FlatDarkLaf
+import com.sun.jndi.toolkit.url.Uri
 import java.awt.*
 import java.awt.event.*
+import java.net.URI
 import javax.swing.*
 
 
@@ -110,6 +112,7 @@ class App {
 
         locations.add(Location("Vine Room",     "How did you get here?", mutableListOf(null, 11, null, null)))         // 25
         locations[25].keyRequired = 6
+
     }
 
     fun travel(dir: Int){
@@ -184,16 +187,20 @@ class MainWindow(private val app: App) : JFrame(), ActionListener {
 
     // Fields to hold the UI elements
     private lateinit var locationLabel: JLabel
-    private lateinit var upButton: JButton
-    private lateinit var downButton: JButton
-    private lateinit var leftButton: JButton
-    private lateinit var rightButton: JButton
-    private lateinit var aButton: JButton
-    private lateinit var bButton: JButton
-    private lateinit var xButton: JButton
-    private lateinit var yButton: JButton
-    private lateinit var gameFrame: JLabel
-    private lateinit var desc: JLabel
+    private lateinit var upButton:      JButton
+    private lateinit var downButton:    JButton
+    private lateinit var leftButton:    JButton
+    private lateinit var rightButton:   JButton
+    private lateinit var aButton:       JButton
+    private lateinit var bButton:       JButton
+    private lateinit var xButton:       JButton
+    private lateinit var yButton:       JButton
+    private lateinit var gameFrame:     JLabel
+    private lateinit var desc:          JLabel
+    private lateinit var tutButton:     JButton
+
+    // Dialogs
+    private lateinit var tutorial: PopUpDialog
 
 
     // Configure the UI and display it
@@ -222,6 +229,9 @@ class MainWindow(private val app: App) : JFrame(), ActionListener {
 
     // Populate the UI with UI controls
     private fun addControls() {
+
+        tutorial = PopUpDialog()
+
         val baseFont = Font(Font.SANS_SERIF, Font.PLAIN, 36)
 
         locationLabel = JLabel("Location")
@@ -291,6 +301,12 @@ class MainWindow(private val app: App) : JFrame(), ActionListener {
         locationLabel.alignmentY = Component.TOP_ALIGNMENT
         desc.font = Font(Font.SANS_SERIF, Font.PLAIN, 13)
         add(desc)
+
+        tutButton = JButton("?")
+        tutButton.bounds = Rectangle( 50, 275, 50, 50)
+        tutButton.font = baseFont
+        tutButton.addActionListener(this)     // Handle any clicks
+        add(tutButton)
     }
 
     /**
@@ -353,8 +369,51 @@ class MainWindow(private val app: App) : JFrame(), ActionListener {
                     app.locations[app.currentLocation].items.removeAt(0)
                 }
             }
+            tutButton   -> tutorial.isVisible = true
         }
         updateView()
+    }
+
+}
+
+class PopUpDialog: JDialog() {
+    /**
+     * Configure the UI
+     */
+    init {
+        configureWindow()
+        addControls()
+        setLocationRelativeTo(null)     // Centre the window
+
+        isVisible = true
+    }
+
+    /**
+     * Set up the dialog window
+     */
+    private fun configureWindow() {
+        title = "Tutorial"
+        contentPane.preferredSize = Dimension(400, 200)
+        isResizable = false
+        isModal = true
+        layout = null
+        pack()
+    }
+
+    /**
+     * Populate the window with controls
+     */
+    private fun addControls() {
+        val baseFont = Font(Font.SANS_SERIF, Font.PLAIN, 16)
+
+        // Adding <html> to the label text allows it to wrap
+        val message = JLabel("<html>TUTORIAL<br/><br/>" +
+                "<br/><br/>" +
+                "Close this window to dismiss")
+        message.bounds = Rectangle(25, 25, 350, 150)
+        message.verticalAlignment = SwingConstants.TOP
+        message.font = baseFont
+        add(message)
     }
 
 }
