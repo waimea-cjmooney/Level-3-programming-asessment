@@ -14,10 +14,8 @@
 
 
 import com.formdev.flatlaf.FlatDarkLaf
-import com.sun.jndi.toolkit.url.Uri
 import java.awt.*
 import java.awt.event.*
-import java.net.URI
 import javax.swing.*
 
 
