@@ -9,8 +9,7 @@ This is a programming project for **NCEA Level 3**, assessed against standard [9
 The project is written in the [Kotlin](https://kotlinlang.org) programming language and demonstrates a number of **complex programming techniques**:
 - Programming a graphical user interface (GUI)
 - Object-oriented programming (OOP) classes and objects
-- Using 
-- user-defined types
+- Using user-defined types
 
 ---
 
@@ -24,5 +23,7 @@ The project is written in the [Kotlin](https://kotlinlang.org) programming langu
 
 ## Project Description
 
-**PLACE YOUR PROJECT DESCRIPTION HERE**
+Aegis-9 is a short map based game where you plays as the prototype of a new line of NeX-bots from NexTech Industries: Aegis-9.
+
+After 
 

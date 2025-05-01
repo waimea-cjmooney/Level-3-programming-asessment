@@ -215,7 +215,7 @@ class MainWindow(private val app: App) : JFrame(), ActionListener {
 
     // Configure the main window
     private fun configureWindow() {
-        title = "Kotlin Swing GUI Demo"
+        title = "Aegis-9"
         contentPane.preferredSize = Dimension(800, 400)
         defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
         isResizable = false
@@ -407,7 +407,8 @@ class PopUpDialog: JDialog() {
         // Adding <html> to the label text allows it to wrap
         val message = JLabel("<html>TUTORIAL<br/><br/>" +
                 "<br/><br/>" +
-                "Close this window to dismiss")
+                "" +
+                "Close this window to dismiss.")
         message.bounds = Rectangle(25, 25, 350, 150)
         message.verticalAlignment = SwingConstants.TOP
         message.font = baseFont
