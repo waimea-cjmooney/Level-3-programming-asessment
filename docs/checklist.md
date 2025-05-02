@@ -43,15 +43,15 @@ The program code:
 ### Program Testing
 
 The program has been tested and there is documented evidence that:
-- [ ] The game is **fully functional**, showing testing of:
-  - [ ] game setup
-  - [ ] player movement
-  - [ ] other player actions
-  - [ ] scoring (if any)
-  - [ ] player win / lose states
-  - [ ] final feedback (if appropriate)
-- [ ] **Valid (expected) data** has been used to test **all data inputs**
-- [ ] Where tests have failed, **fixes** are discussed and **tests re-run**
+- [x] The game is **fully functional**, showing testing of:
+  - [x] game setup
+  - [x] player movement
+  - [x] other player actions
+  - [x] scoring (if any)
+  - [x] player win / lose states
+  - [x] final feedback (if appropriate)
+- [x] **Valid (expected) data** has been used to test **all data inputs**
+- [x] Where tests have failed, **fixes** are discussed and **tests re-run**
 
 ---
 
@@ -94,9 +94,9 @@ The program code is well-commented:
 ### Program Testing
 
 The program has been tested using:
-- [ ] A test plan **prepared in advance** of the coding
-- [ ] A test plan that **defines test data values** to be used
-- [ ] Test values that cover **boundary** (limit / edge) cases
+- [x] A test plan **prepared in advance** of the coding
+- [x] A test plan that **defines test data values** to be used
+- [x] Test values that cover **boundary** (limit / edge) cases
 
 ---
 
@@ -131,7 +131,7 @@ The program code:
 ### Program Testing
 
 The program has been tested to be **robust**:
-- [ ] With a **comprehensive and thorough** test plan
-- [ ] Testing **regularly** throughput development, allowing **time for debugging**
-- [ ] Using test values that cover **invalid** (unexpected) cases
-- [ ] Resulting in a program that **copes appropriately** with invalid inputs
+- [x] With a **comprehensive and thorough** test plan
+- [x] Testing **regularly** throughput development, allowing **time for debugging**
+- [x] Using test values that cover **invalid** (unexpected) cases
+- [x] Resulting in a program that **copes appropriately** with invalid inputs
