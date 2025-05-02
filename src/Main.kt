@@ -2,7 +2,7 @@
  * ==================================================================================
  * Programming Project for NCEA Level 3, Standard 91906
  * ----------------------------------------------------------------------------------
- * Project Name:   PROJECT NAME HERE
+ * Project Name:   Aegis-9
  * Project Author: Corban Mooney
  * GitHub Repo:    https://github.com/waimea-cjmooney/Level-3-programming-assessment
  * ----------------------------------------------------------------------------------
@@ -17,6 +17,7 @@ import com.formdev.flatlaf.FlatDarkLaf
 import java.awt.*
 import java.awt.event.*
 import javax.swing.*
+import kotlin.system.exitProcess
 
 
 /**
@@ -43,50 +44,51 @@ class App {
     // Extra variables
     var currentLocation = 0
     var lockedHere = false
+    var win = false
 
     init {
         /**
         * Add Locations to the list
         * Order of connections: (west, north, east, south)
         */
-        locations.add(Location("The Conveyor",  "Test", mutableListOf(1, 4, 3, null)))              // 0
+        locations.add(Location("The Conveyor",           "A room sprawling with hundreds of inoperative experimental robots, and is the output for the factory.", mutableListOf(1, 4, 3, null)))           // 0
         locations[0].discovered = true
 
-        locations.add(Location("Cleaning Corridor",      null, mutableListOf(null, 5, 0, 2)))       // 1
-        locations.add(Location("The Broom Closet",  null, mutableListOf(null, 1, null, null)))      // 2
-        locations[2].items.add(Item("small key with the number 1 engraved in it", "key", 1))
+        locations.add(Location("Cleaning Corridor",      "A small corridor filled with cleaning carts and wet floor signs.", mutableListOf(null, 5, 0, 2)))             // 1
+        locations.add(Location("The Broom Closet",       "A tiny closet filled with cleaning supplies, brooms, and mops.", mutableListOf(null, 1, null, null)))         // 2
+        locations[2].items.add(Item("small key with the number 1 engraved hanging from a metal shelf.", "key", 1))
 
-        locations.add(Location("Storage Room",  null, mutableListOf(0, null, null, null)))          // 3
+        locations.add(Location("Storage Room",           "A room filled with various testing equipment and gadgets.", mutableListOf(0, null, null, null)))              // 3
         locations[3].keyRequired = 1
-        locations[3].items.add(Item("small key with the number 2 engraved in it", "key", 2))
+        locations[3].items.add(Item("small key with the number 2 engraved in it lays on the concrete ground.", "key", 2))
 
-        locations.add(Location("Left Corridor",      null, mutableListOf(5, null, 17, 0)))               // 4
+        locations.add(Location("Right Corridor",          "A large corridor with a rank smell.", mutableListOf(5, null, 17, 0)))                                         // 4
         locations[4].keyRequired = 2
 
-        locations.add(Location("Right Corridor",     null, mutableListOf(null, 6, 4, 1)))                // 5
+        locations.add(Location("Left Corridor",         "A large corridor with a small waste bin in the corner.", mutableListOf(null, 6, 4, 1)))                       // 5
         locations[5].keyRequired = 2
 
-        locations.add(Location("Break Room 1",     null, mutableListOf(7, 22, null, 5)))               // 6
+        locations.add(Location("Break Room 1",           "A room with five tables arranged in a circle covered in snacks.", mutableListOf(7, 22, null, 5)))             // 6
         locations[6].keyRequired = 3
 
-        locations.add(Location("Break Room 2",     null, mutableListOf(null, null, 6, 8)))             // 7
-        locations.add(Location("location8",     null, mutableListOf(9, 7, null, null)))             // 8
-        locations.add(Location("location9",     null, mutableListOf(null, 12, 8, 10)))              // 9
-        locations.add(Location("location10",    null, mutableListOf(11, 9, null, null)))            // 10
+        locations.add(Location("Break Room 2",           "A room with various board games scattered around 3 large tables.", mutableListOf(null, null, 6, 8)))          // 7
+        locations.add(Location("Right Factory hallway",  null, mutableListOf(9, 7, null, null)))                                                                        // 8
+        locations.add(Location("Left Factory hallway",   null, mutableListOf(null, 12, 8, 10)))                                                                         // 9
+        locations.add(Location("Factory room",    "A room filled with large clanging machinery", mutableListOf(11, 9, null, null)))                                     // 10
         locations[10].items.add(Item("small key with the number 4 engraved in it", "key", 4))
 
-        locations.add(Location("Back Office",    null, mutableListOf(null, 12, 10, 25)))             // 11
+        locations.add(Location("Back Office",    "A messy office room missing a name tag.", mutableListOf(null, 12, 10, 25)))                                           // 11
         locations[11].keyRequired = 4
 
-        locations.add(Location("location12",    null, mutableListOf(11, 13, null, 9)))              // 12
+        locations.add(Location("Side Office",    "A clean office room with a name tag on the desk, it reads \"Elizabeth.\"", mutableListOf(11, 13, null, 9)))              // 12
         locations[12].keyRequired = 4
 
-        locations.add(Location("location13",    null, mutableListOf(null, null, 14, 12)))           // 13
-        locations.add(Location("location14",    null, mutableListOf(13, 24, 15, null)))             // 14
-        locations.add(Location("location15",    null, mutableListOf(14, 16, null, null)))           // 15
-        locations.add(Location("location16",    null, mutableListOf(24, null, 22, 15)))             // 16
+        locations.add(Location("Fire Exit",    null, mutableListOf(null, null, 14, 12)))           // 13
+        locations.add(Location("Tour Room 1",    null, mutableListOf(13, 24, 15, null)))             // 14
+        locations.add(Location("Tour Room 2",    null, mutableListOf(14, 16, null, null)))           // 15
+        locations.add(Location("Tour Room 3",    null, mutableListOf(24, null, 22, 15)))             // 16
         locations.add(Location("Product Office",    null, mutableListOf(4, 20, 18, null)))              // 17
-        locations.add(Location("Programming",    null, mutableListOf(17, 19, null, null)))           // 18
+        locations.add(Location("Programming",    "Neatly arranged computers, all glowing. one of them has a sticky note which reads \"Password: password\"", mutableListOf(17, 19, null, null)))           // 18
         locations[18].keyRequired = 3
 
         locations.add(Location("Complaints Office",    null, mutableListOf(20, 21, null, 18)))             // 19
@@ -95,20 +97,20 @@ class App {
         locations.add(Location("Main Office",    null, mutableListOf(22, null, 19, 17)))             // 20
         locations[20].items.add(Item("small key with the number 3 engraved in it", "key", 3))
 
-        locations.add(Location("location21",    null, mutableListOf(22, 23, null, 19)))             // 21
+        locations.add(Location("Entrance Hallway",    "", mutableListOf(22, 23, null, 19)))             // 21
         locations[21].keyRequired = 5
         locations[21].items.add(Item("large key card with the number 6 printed on it", "key", 6))
 
-        locations.add(Location("location22",    null, mutableListOf(6, 16, 21, 20)))                // 22
+        locations.add(Location("Main Room",    null, mutableListOf(6, 16, 21, 20)))                // 22
         locations[22].keyRequired = 5
 
         locations.add(Location("Main Entrance", null, mutableListOf(null, EXIT, null, 21)))           // 23
         locations[23].keyRequired = 6
 
-        locations.add(Location("location24",    null, mutableListOf(null, null, 16, 14)))           // 24
+        locations.add(Location("Tour Room 4",    null, mutableListOf(null, null, 16, 14)))           // 24
         locations[24].items.add(Item("small key with the number 5 engraved in it", "key", 5))
 
-        locations.add(Location("Vine Room",     "How did you get here?", mutableListOf(null, 11, null, null)))         // 25
+        locations.add(Location("Vine Room",     "How did you get here...?", mutableListOf(null, 11, null, null)))         // 25
         locations[25].keyRequired = 6
 
     }
@@ -116,6 +118,7 @@ class App {
     fun travel(dir: Int){
         if (locations[currentLocation].connections[dir] == EXIT){
             println("GAME WIN")
+            win = true
         } else if (dirAvailable(dir)){
             currentLocation = locations[currentLocation].connections[dir]!!
             locations[currentLocation].discovered = true
@@ -198,7 +201,8 @@ class MainWindow(private val app: App) : JFrame(), ActionListener {
     private lateinit var tutButton:     JButton
 
     // Dialogs
-    private lateinit var tutorial: PopUpDialog
+    private lateinit var tutorial: TutorialPopup
+    private lateinit var win: WinPopup
 
 
     // Configure the UI and display it
@@ -228,7 +232,8 @@ class MainWindow(private val app: App) : JFrame(), ActionListener {
     // Populate the UI with UI controls
     private fun addControls() {
 
-        tutorial = PopUpDialog()
+        tutorial = TutorialPopup()
+        win = WinPopup()
 
         val baseFont = Font(Font.SANS_SERIF, Font.PLAIN, 36)
 
@@ -295,7 +300,7 @@ class MainWindow(private val app: App) : JFrame(), ActionListener {
         add(bButton)
 
         desc = JLabel()
-        desc.bounds = Rectangle(255, 20, 300, 300)
+        desc.bounds = Rectangle(255, 70, 300, 300)
         locationLabel.alignmentY = Component.TOP_ALIGNMENT
         desc.font = Font(Font.SANS_SERIF, Font.PLAIN, 13)
         add(desc)
@@ -333,10 +338,10 @@ class MainWindow(private val app: App) : JFrame(), ActionListener {
         desc.text += if (app.lockedHere) "The door doesn't budge${if (app.keys.lastIndex != 0) ", and none of your keys fit in the lock." else "."}<br/>" else ""
 
         // Room description
-        desc.text += if (app.locations[app.currentLocation].desc != null) app.locations[app.currentLocation].desc + "<br/>" else ""
+        desc.text += "${if (app.locations[app.currentLocation].desc != null) app.locations[app.currentLocation].desc else "" } <br/>"
 
         // Shows Items that are in the room
-        desc.text += "${if (app.locations[app.currentLocation].items.isNotEmpty()) "A ${app.locations[app.currentLocation].items[0]!!.name} lays on the ground [X] Pick up" else "Nothing in here"}<br/>"
+        desc.text += "${if (app.locations[app.currentLocation].items.isNotEmpty()) "A ${app.locations[app.currentLocation].items[0]!!.name} [X] Pick up" else "Nothing in here"}<br/><br/>"
 
         // Shows possible movement options as well as what those rooms are if the user has unlocked them
         desc.text += "To West: ${app.whatAtDir(0)}<br/>To North: ${app.whatAtDir(1)}<br/>To East: ${app.whatAtDir(2)}<br/>To South: ${app.whatAtDir(3)}<br/>"
@@ -344,6 +349,12 @@ class MainWindow(private val app: App) : JFrame(), ActionListener {
         // Shows keys you own
         if (app.keys.size > 1) for (i in app.keys) desc.text += if (i != 0) app.keys[i].toString() + " " else "Keys: "
         desc.text += "</html>"
+
+        if (app.win) {
+            win.isVisible = true
+            isVisible = false
+            exitProcess(0)
+        }
     }
 
 
@@ -374,7 +385,7 @@ class MainWindow(private val app: App) : JFrame(), ActionListener {
 
 }
 
-class PopUpDialog: JDialog() {
+class TutorialPopup(): JDialog() {
     /**
      * Configure the UI
      */
@@ -405,10 +416,49 @@ class PopUpDialog: JDialog() {
         val baseFont = Font(Font.SANS_SERIF, Font.PLAIN, 16)
 
         // Adding <html> to the label text allows it to wrap
-        val message = JLabel("<html>TUTORIAL<br/><br/>" +
+        val message = JLabel("<html>TUTORIAL<br/>" +
+                "The movement buttons are on the left of the main window, use them to, yknow, move?<br/>" +
+                "The [X] Button is on the right of the main window, it is used to pickup Items" +
                 "<br/><br/>" +
-                "" +
                 "Close this window to dismiss.")
+        message.bounds = Rectangle(25, 25, 350, 150)
+        message.verticalAlignment = SwingConstants.TOP
+        message.font = baseFont
+        add(message)
+    }
+
+}
+
+class WinPopup(): JDialog() {
+    /**
+     * Configure the UI
+     */
+    init {
+        configureWindow()
+        addControls()
+        setLocationRelativeTo(null)     // Centre the window
+    }
+
+    /**
+     * Set up the dialog window
+     */
+    private fun configureWindow() {
+        title = "You win!"
+        contentPane.preferredSize = Dimension(400, 200)
+        isResizable = false
+        isModal = true
+        layout = null
+        pack()
+    }
+
+    /**
+     * Populate the window with controls
+     */
+    private fun addControls() {
+        val baseFont = Font(Font.SANS_SERIF, Font.PLAIN, 16)
+
+        // Adding <html> to the label text allows it to wrap
+        val message = JLabel("<html>You Escaped!")
         message.bounds = Rectangle(25, 25, 350, 150)
         message.verticalAlignment = SwingConstants.TOP
         message.font = baseFont

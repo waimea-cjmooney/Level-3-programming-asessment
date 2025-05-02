@@ -68,28 +68,28 @@ The user should be taken to room 3 ("Storage Room") and the location should be m
 
 ## Travelling to the exit
 
-Example test description. Example test description. Example test description. Example test description. Example test description. Example test description.
+using the GUI the user can travel to the exit and win the game.
 
 ### Test Data To Use
 
-Details of test data and reasons for selection. Details of test data and reasons for selection. Details of test data and reasons for selection.
+Starting at room 23 (Main Entrance) pressing the North button. With key 6 this is a valid input.
 
 ### Expected Test Result
 
-Statement detailing what should happen. Statement detailing what should happen. Statement detailing what should happen. Statement detailing what should happen.
+The user should be shown the win window and the game should close.
 
 ---
 
-## Example Test Name
+## Travelling to all locations
 
-Example test description. Example test description. Example test description. Example test description. Example test description. Example test description.
+The User can travel to every location if they have all the keys
 
 ### Test Data To Use
 
-Details of test data and reasons for selection. Details of test data and reasons for selection. Details of test data and reasons for selection.
+Starting from room 0 (The Conveyor) with keys 1, 2, 3, 4, 5, and 6, and traveling to each location. this is a boundary
 
 ### Expected Test Result
 
-Statement detailing what should happen. Statement detailing what should happen. Statement detailing what should happen. Statement detailing what should happen.
+User should travel to all locations.
 
 ---

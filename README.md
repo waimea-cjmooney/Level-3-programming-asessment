@@ -25,5 +25,7 @@ The project is written in the [Kotlin](https://kotlinlang.org) programming langu
 
 Aegis-9 is a short map based game where you plays as the prototype of a new line of NeX-bots from NexTech Industries: Aegis-9.
 
-After 
+After being left on the conveyor and labeled as a failed experiment, Aegis-9 gains consciousness during the night.
+
+It's confusion about it's whereabouts and origin, lead it to try to escape the NexTech factory.
 
