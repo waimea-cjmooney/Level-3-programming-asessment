@@ -14,7 +14,7 @@ Starting from room 0 ("The Conveyor") pressing the west button. This is a valid 
 
 ### Test Result
 
-![Test-1](videos/TEST-1.gif)
+![Test-1](Videos/TEST-1.gif)
 
 This functions as expected and lets the user travel between various locations
 
@@ -30,7 +30,7 @@ Starting from room 0 ("The Conveyor") pressing the south button. This is an inva
 
 ### Test Result
 
-![Test-2](videos/TEST-2.gif)
+![Test-2](Videos/TEST-2.gif)
 
 Because the button becomes disabled, the user will never encounter a situation where they travel to a non-existing location.
 
@@ -46,7 +46,7 @@ Starting from room 0 ("The Conveyor") pressing the east button. Without a key th
 
 ### Test Result
 
-![Test-3](videos/TEST-3.gif)
+![Test-3](Videos/TEST-3.gif)
 
 The user cannot enter a room they do not have the key for. This is working as intended.
 
@@ -62,7 +62,7 @@ Starting in room 0 ("The Conveyor") pressing the east button. With key 1 this is
 
 ### Test Result
 
-![Test-4](videos/TEST-4.gif)
+![Test-4](Videos/TEST-4.gif)
 
 When a user collects a key, all rooms that use that key will automatically unlock and allow the user to travel there. This is working as intended.
 
@@ -78,7 +78,7 @@ Starting at room 23 (Main Entrance) pressing the North button. With key 6 this i
 
 ### Test Result
 
-![Test-5](videos/TEST-5.gif)
+![Test-5](Videos/TEST-5.gif)
 
 this is working as intended, Keep in mind that the ending popup doesn't show up in the screen recording
 
@@ -94,7 +94,7 @@ Starting from room 0 (The Conveyor) with keys 1, 2, 3, 4, 5, and 6, and travelin
 
 ### Test Result
 
-![Test-6](videos/TEST-6.gif)
+![Test-6](Videos/TEST-6.gif)
 
 this is working as intended, Keep in mind that the ending popup doesn't show up in the screen recording
 
